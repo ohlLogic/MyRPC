@@ -1,7 +1,7 @@
-package com.ohl.MyRPCVersion3.server;
+package com.ohl.MyRPCVersion5.server;
 
-import com.ohl.MyRPCVersion3.common.RPCRequest;
-import com.ohl.MyRPCVersion3.common.RPCResponse;
+import com.ohl.MyRPCVersion5.common.RPCRequest;
+import com.ohl.MyRPCVersion5.common.RPCResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @AllArgsConstructor
-public class NettyRPCSerHandler extends SimpleChannelInboundHandler<RPCRequest> {
+public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
     private ServiceProvider serviceProvider;
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RPCRequest msg) throws Exception {
+        //System.out.println(msg);
         RPCResponse response = getResponse(msg);
         ctx.writeAndFlush(response);
         ctx.close();
@@ -26,16 +28,15 @@ public class NettyRPCSerHandler extends SimpleChannelInboundHandler<RPCRequest> 
         ctx.close();
     }
 
-
-    RPCResponse getResponse(RPCRequest request)
-    {
-        //得到服务名
+    RPCResponse getResponse(RPCRequest request) {
+        // 得到服务名
         String interfaceName = request.getInterfaceName();
-        //得到服务端相应服务实现类
+        // 得到服务端相应服务实现类
         Object service = serviceProvider.getService(interfaceName);
+        // 反射调用方法
+        Method method = null;
         try {
-            //反射调用方法
-            Method method = service.getClass().getMethod(request.getMethodName(), request.getParamsTypes());
+            method = service.getClass().getMethod(request.getMethodName(), request.getParamsTypes());
             Object invoke = method.invoke(service, request.getParams());
             return RPCResponse.success(invoke);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

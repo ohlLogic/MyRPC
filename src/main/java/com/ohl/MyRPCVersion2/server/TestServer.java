@@ -3,8 +3,6 @@ package com.ohl.MyRPCVersion2.server;
 import com.ohl.MyRPCVersion2.service.BlogService;
 import com.ohl.MyRPCVersion2.service.UserService;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 多个服务的实现类

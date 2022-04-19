@@ -13,30 +13,30 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolRPCRPCServer implements RPCServer {
     private final ThreadPoolExecutor threadPool;
-    private ServiceProvider serviceProvide;
+    private ServiceProvider serviceProvider;
 
     public ThreadPoolRPCRPCServer(ServiceProvider serviceProvider)
     {
         threadPool = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                 1000, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
 
-        this.serviceProvide = serviceProvider;
+        this.serviceProvider = serviceProvider;
     }
 
     public ThreadPoolRPCRPCServer(ServiceProvider serviceProvider, int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue){
         threadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-        this.serviceProvide = serviceProvider;
+        this.serviceProvider = serviceProvider;
     }
 
     @Override
     public void start(int port) {
         try {
-            System.out.println("服务端启动");
+            System.out.println("线程池服务端启动");
             ServerSocket serverSocket = new ServerSocket(port);
             while(true)
             {
                 Socket socket = serverSocket.accept();
-                threadPool.execute(new WorkThread(socket, serviceProvide));
+                threadPool.execute(new WorkThread(socket, serviceProvider));
             }
         } catch (IOException e) {
             e.printStackTrace();

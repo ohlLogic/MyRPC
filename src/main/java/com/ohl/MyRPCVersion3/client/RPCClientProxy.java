@@ -12,7 +12,7 @@ import java.lang.reflect.Proxy;
 public class RPCClientProxy implements InvocationHandler {
     private RPCClient client;
 
-    //jdk动态代理
+    //jdk动态代理，每一次代理对象调用方法，会经过此方法增强（反射获取request对象，socket发送到客户端）
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         RPCRequest request = RPCRequest.builder().interfaceName(method.getDeclaringClass().getName())
@@ -26,7 +26,7 @@ public class RPCClientProxy implements InvocationHandler {
 
     <T> T getProxy(Class<T> clazz)
     {
-       Object o =  Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
+        Object o =  Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
         return (T) o;
     }
 }

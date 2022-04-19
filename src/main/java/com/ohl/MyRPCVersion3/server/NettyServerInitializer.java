@@ -28,6 +28,6 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new ObjectEncoder());
         pipeline.addLast(new ObjectDecoder(s -> Class.forName(s)));
 
-        pipeline.addLast(new NettyRPCSerHandler(serviceProvider));
+        pipeline.addLast(new NettyRPCServerHandler(serviceProvider));
     }
 }

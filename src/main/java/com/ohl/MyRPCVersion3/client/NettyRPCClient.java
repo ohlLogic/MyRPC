@@ -38,7 +38,7 @@ public class NettyRPCClient implements RPCClient{
     @Override
     public RPCResponse sendRequest(RPCRequest request) {
         try {
-            ChannelFuture channelFuture = bootstrap.connect(host, port);
+            ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
             Channel channel = channelFuture.channel();
 
             //发送数据
